@@ -23,7 +23,7 @@ endif ()
 option ( UINT_ESPECIALLY "using custom ulong" OFF )
 option ( USING_LUAJIT "using luajit" OFF )
 option ( GC64 "using gc64" OFF )
-option ( LUAC_COMPATIBLE_FORMAT "compatible format" OFF )
+option ( LUAC_COMPATIBLE_FORMAT "compatible format" ON )
 
 find_path(XLUA_PROJECT_DIR NAMES SConstruct
     PATHS 
@@ -39,6 +39,33 @@ endif()
 
 set(LUA_SRC_PATH lua-${LUA_VERSION}/src)
 set(LUAJIT_SRC_PATH luajit-2.1.0b3/src)
+
+#begin lua-rapidjson
+set (RAPIDJSON_SRC lua-rapidjson/source/rapidjson.cpp)
+set_property(
+	SOURCE ${RAPIDJSON_SRC}
+	APPEND
+	PROPERTY COMPILE_DEFINITIONS
+	LUA_LIB
+)
+list(APPEND THIRDPART_INC  lua-rapidjson/include)
+set (THIRDPART_SRC ${THIRDPART_SRC} ${RAPIDJSON_SRC})
+#end lua-rapidjson
+
+#begin lua-profobuf
+set (LPB_SRC 
+	lua-protobuf/pb.c
+)
+set_property(
+	SOURCE ${LPB_SRC}
+	APPEND
+	PROPERTY COMPILE_DEFINITIONS
+	LUA_LIB
+)
+list(APPEND THIRDPART_INC lua-protobuf)
+set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
+#end lua-protobuf
+
 
 if (USING_LUAJIT)
 	
